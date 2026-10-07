@@ -6,9 +6,9 @@ abstract public class Articulo {
     private double precio;
     private Categoria categoria;
 
-    public Articulo (int codigo, String nombre, double precio, Categoria categoria){
+    public Articulo(int codigo, String nombre, double precio, Categoria categoria) {
         this.codigo = codigo;
-        this.nombre=nombre;
+        this.nombre = nombre;
         this.precio = precio;
         this.categoria = categoria;
     }
@@ -46,6 +46,7 @@ abstract public class Articulo {
     }
 
     public abstract String getTipoArticulo();
+
     public abstract String getDetalleEspecifico();
 /*
 Sobrescribir el metodo toString() para devolver una representación legible del artículo,

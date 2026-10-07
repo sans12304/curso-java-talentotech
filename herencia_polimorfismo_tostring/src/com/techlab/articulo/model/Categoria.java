@@ -10,24 +10,24 @@ public class Categoria {
         this.descripcion = descripcion;
     }
 
-    public int getCodigo(){
+    public int getCodigo() {
         return this.codigo;
-    }
-
-    public String getNombre(){
-        return this.nombre;
-    }
-
-    public String getDescripcion(){
-        return this.descripcion;
     }
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 
+    public String getNombre() {
+        return this.nombre;
+    }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return this.descripcion;
     }
 
     public void setDescripcion(String descripcion) {
