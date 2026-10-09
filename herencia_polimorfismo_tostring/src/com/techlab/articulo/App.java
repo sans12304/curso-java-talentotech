@@ -6,8 +6,8 @@ import com.techlab.articulo.model.Categoria;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class App {
+    // 4.2 - Precarga de categorias
     public static void precargarCategorias(ArrayList<Categoria> categorias) {
         Categoria cat1 = new Categoria(1, "Electronica", "Productos tecnológicos y electrónicos");
         categorias.add(cat1);
@@ -19,6 +19,7 @@ public class App {
         categorias.add(cat4);
     }
 
+    // 5 - Menu Principal
     public static void menu() {
         System.out.println("╔════════════════════════════════════════════════════╗");
         System.out.println("║                SISTEMA DE ARTÍCULOS                ║");
@@ -37,60 +38,128 @@ public class App {
         System.out.print("» Ingrese una opción: ");
     }
 
+    // 6.1 - Ingresar Articulo
     public static void ingresarArticulo(Scanner scanner, ArrayList<Articulo> articulos, ArrayList<Categoria> categorias) {
-        int opcion, codigo, garantiaMeses, diasVencimiento;
-        String nombre;
-        double precio;
-        do {
-            System.out.println("\n╔════════════════════════════════════════════════════╗");
-            System.out.println("║                  INGRESAR ARTÍCULO                 ║");
-            System.out.println("╠════════════════════════════════════════════════════╣");
-            System.out.println("║                                                    ║");
-            System.out.println("║   [ 1 ] Artículo electrónico                       ║");
-            System.out.println("║   [ 2 ] Artículo alimenticio                       ║");
-            System.out.println("║                                                    ║");
-            System.out.println("╚════════════════════════════════════════════════════╝");
-            System.out.print("» Seleccione el tipo de artículo: ");
-            opcion = scanner.nextInt();
-            switch (opcion) {
-                case 1:
-                    System.out.print("\n» Ingrese el codigo del articulo.");
-                    codigo = scanner.nextInt();
-                    if (articulos.contains(codigo)) {
-                        System.out.println("Ya existe un articulo con este codigo. Cancelando el ingreso.");
-                        break;
-                    }
-                    System.out.print("\n» Ingrese el nombre del articulo.");
-                    nombre = scanner.nextLine();
-                    do {
-                        System.out.println("El nombre del articulo no puede estar vacio, intente nuevamente.");
-                        nombre = scanner.nextLine();
-                    } while (nombre == "" | nombre == null);
-                    System.out.print("\n» Ingrese el precio del articulo.");
-                    precio = scanner.nextDouble();
-                    do {
-                        System.out.println("El precio del articulo no puede ser menor a $0, intente nuevamente.");
-                        precio = scanner.nextDouble();
-                    } while (precio < 0);
-                    System.out.println("Categorias disponibles para asignar al articulo:");
-                    for (Categoria categoria : categorias) {
-                        System.out.println(categoria);
-                    }
-                    //articulos.add(new ArticuloElectronico(codigo, nombre, precio, , garantiaMeses));
-                    break;
-                case 2:
-                    // articulos.add(new ArticuloAlimenticio(codigo, nombre, precio, , diasVencimiento));
-                    break;
-                default:
-                    System.out.println("Opcion invalida, intente nuevamente.");
-            }
-        } while (opcion != 1 && opcion != 2);
+
     }
 
-    static void main(String[] args) {
+    // 6.2 - Listar Articulos
+    public static void listarArticulos(ArrayList<Articulo> articulos) {
+        if (articulos.isEmpty()) {
+            System.out.println("La lista de articulos esta vacia.");
+            return;
+        }
+        for (Articulo articulo : articulos) {
+            System.out.println(articulo);
+        }
+    }
+
+    // 6.3 - Consultar un articulo
+    public static void consultarArticulo(Scanner scanner, ArrayList<Articulo> articulos) {
+        if (articulos.isEmpty()) {
+            System.out.println("La lista de articulos esta vacia.");
+            return;
+        }
+        int codigo = leerEntero(scanner, "Escriba el codigo del articulo a consultar");
+        for (Articulo articulo : articulos) {
+            if (articulo.getCodigo() == codigo) {
+                System.out.println("¡Articulo encontrado!");
+                System.out.println(articulo);
+                System.out.println("- - - - - - - -");
+            }
+        }
+        System.out.println("No se encontro el articulo.");
+    }
+
+    // 6.4 - Modificar un articulo
+    public static void modificarArticulo(Scanner scanner, ArrayList<Articulo> articulos, ArrayList<Categoria> categorias) {
+
+    }
+
+    // 6.5 - Eliminar articulo
+    public static void eliminarArticulo(Scanner scanner, ArrayList<Articulo> articulos) {
+
+    }
+
+    // 6.6 - Listar categorias
+    public static void listarCategorias(ArrayList<Categoria> categorias) {
+
+    }
+
+    // 7.1 - Buscar articulo por codigo
+    public static void buscarArticuloPorCodigo(ArrayList<Articulo> articulos, int codigo) {
+
+    }
+
+    // 7.2 - Buscar una categoria por codigo
+    public static Categoria buscarCategoriaPorCodigo(ArrayList<Categoria> categorias, int codigo) {
+        return null;
+    }
+
+    // 7.3 - Solicitar una categoria existente
+    public static Categoria pedirCategoriaExistente(Scanner scanner, ArrayList<Categoria> categorias) {
+        return null;
+    }
+
+    // 7.4 - Leer un numero entero
+    public static int leerEntero(Scanner scanner, String mensaje) {
+        while (true) {
+            System.out.println(mensaje);
+            String entrada = scanner.nextLine();
+            try {
+                return Integer.parseInt(entrada);
+            } catch (NumberFormatException e) {
+                System.out.println("No se ingreso un numero valido, intente nuevamente.");
+            }
+        }
+    }
+
+    // 7.5 - Leer un entero no negativo
+    public static int leerEnteroNoNegativo(Scanner scanner, String mensaje) {
+        while (true) {
+            int entrada = leerEntero(scanner, mensaje);
+            if (entrada >= 0) {
+                return entrada;
+            } else {
+                System.out.println("El numero ingresado es negativo. intente nuevamente");
+            }
+        }
+    }
+
+    // 7.6 - Leer un número decimal no negativo
+    public static double leerDoubleNoNegativo(Scanner scanner, String mensaje) {
+        while (true) {
+            System.out.println(mensaje);
+            String entrada = scanner.nextLine();
+            try {
+                if (Double.parseDouble(entrada) >= 0) {
+                    return Double.parseDouble(entrada);
+                } else {
+                    System.out.println("Ingrese un numero mayor a 0.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ingrese un numero decimal valido.");
+            }
+        }
+    }
+
+    // 7.7 - Leer texto no vacio
+    public static String leerTextoNoVacio(Scanner scanner, String mensaje) {
+        while (true) {
+            System.out.println(mensaje);
+            String entrada = scanner.nextLine();
+            if (entrada != null && !entrada.trim().isEmpty()) {
+                return entrada;
+            }
+            System.out.println("Se introdujo texto vacio, intente nuevamente");
+        }
+    }
+
+    void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         ArrayList<Articulo> articulos = new ArrayList<>();
         ArrayList<Categoria> categoria = new ArrayList<>();
+
         precargarCategorias(categoria);
 
         int opcion;
@@ -102,19 +171,19 @@ public class App {
                     ingresarArticulo(sc, articulos, categoria);
                     break;
                 case 2:
-                    //TODO: listar
+                    listarArticulos(articulos);
                     break;
                 case 3:
-                    //TODO: consultar
+                    consultarArticulo(sc, articulos);
                     break;
                 case 4:
-                    //TODO: modificar
+                    modificarArticulo(sc, articulos, categoria);
                     break;
                 case 5:
-                    //TODO: eliminar
+                    eliminarArticulo(sc, articulos);
                     break;
                 case 6:
-                    //TODO: listar categorías
+                    listarCategorias(categoria);
                     break;
                 case 0:
                     System.out.println("Saliendo...");
@@ -126,4 +195,6 @@ public class App {
 
         sc.close();
     }
+
 }
+
