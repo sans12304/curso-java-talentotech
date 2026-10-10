@@ -1,6 +1,8 @@
 package com.techlab.articulo;
 
 import com.techlab.articulo.model.Articulo;
+import com.techlab.articulo.model.ArticuloAlimenticio;
+import com.techlab.articulo.model.ArticuloElectronico;
 import com.techlab.articulo.model.Categoria;
 
 import java.util.ArrayList;
@@ -35,12 +37,55 @@ public class App {
         System.out.println("║   [ 0 ] Salir                                      ║");
         System.out.println("║                                                    ║");
         System.out.println("╚════════════════════════════════════════════════════╝");
-        System.out.print("» Ingrese una opción: ");
     }
 
     // 6.1 - Ingresar Articulo
     public static void ingresarArticulo(Scanner scanner, ArrayList<Articulo> articulos, ArrayList<Categoria> categorias) {
+        System.out.println("--- Ingresar Articulo ---");
+        System.out.println("[ 1 ] Articulo electronico");
+        System.out.println("[ 2 ] Articulo Alimenticio");
 
+        int garantiaMeses, diasVencimiento, codigo, opcion;
+        String nombreArticulo;
+        double precioArticulo;
+
+        opcion = leerEntero(scanner, "Seleccione el tipo de articulo:");
+        while (opcion != 1 && opcion != 2) {
+            System.out.println("Opcion no valida, intente nuevamente");
+            opcion = leerEntero(scanner, "Seleccione el tipo de articulo:");
+        }
+
+        codigo = leerEntero(scanner, "Ingrese el codigo del producto");
+        if (buscarArticuloPorCodigo(articulos, codigo) != null) {
+            System.out.println("El articulo ya se encuentra en el sistema.");
+            System.out.println("Pruebe a Modificar un articulo en su lugar.");
+            return;
+        }
+
+        nombreArticulo = leerTextoNoVacio(scanner, "Ingrese el nombre del articulo:");
+        precioArticulo = leerDoubleNoNegativo(scanner, "Ingrese el precio del articulo:");
+
+        listarCategorias(categorias);
+
+        Categoria categoria = pedirCategoriaExistente(scanner, categorias);
+
+        Articulo articulo;
+        switch (opcion) {
+            case 1:
+                garantiaMeses = leerEnteroNoNegativo(scanner, "Ingrese la garantia del producto, expresada en meses: ");
+                articulo = new ArticuloElectronico(codigo, nombreArticulo, precioArticulo, categoria, garantiaMeses);
+                break;
+            case 2:
+                diasVencimiento = leerEnteroNoNegativo(scanner, "Ingrese la cantiad de dias para el vencimiento: ");
+                articulo = new ArticuloAlimenticio(codigo, nombreArticulo, precioArticulo, categoria, diasVencimiento);
+                break;
+            default:
+                return;
+        }
+
+        articulos.add(articulo);
+        System.out.println("Articulo añadido correctamente.");
+        System.out.println(articulo);
     }
 
     // 6.2 - Listar Articulos
@@ -51,6 +96,7 @@ public class App {
         }
         for (Articulo articulo : articulos) {
             System.out.println(articulo);
+            System.out.println();
         }
     }
 
@@ -68,37 +114,100 @@ public class App {
                 System.out.println("- - - - - - - -");
             }
         }
-        System.out.println("No se encontro el articulo.");
     }
 
     // 6.4 - Modificar un articulo
     public static void modificarArticulo(Scanner scanner, ArrayList<Articulo> articulos, ArrayList<Categoria> categorias) {
+        int codigoArticulo, garantiaMeses, diasVencimiento;
+        Articulo articulo;
+        String nombre;
+        double precio;
+        Categoria categoria;
 
+        if (articulos.isEmpty()) {
+            System.out.println("No hay articulos que modificar.");
+            return;
+        }
+        codigoArticulo = leerEntero(scanner, "Ingrese el codigo del articulo");
+        articulo = buscarArticuloPorCodigo(articulos, codigoArticulo);
+        if (articulo == null) {
+            System.out.println("El articulo no existe.");
+            return;
+        }
+        nombre = leerTextoNoVacio(scanner, "Ingrese el nuevo nombre para el articulo");
+        precio = leerDoubleNoNegativo(scanner, "Ingrese el nuevo precio para el articulo");
+        categoria = pedirCategoriaExistente(scanner, categorias);
+        articulo.setNombre(nombre);
+        articulo.setPrecio(precio);
+        articulo.setCategoria(categoria);
+        if (articulo instanceof ArticuloElectronico) {
+            garantiaMeses = leerEnteroNoNegativo(scanner, "Ingrese la garantia del producto, expresada en meses");
+            ((ArticuloElectronico) articulo).setGarantiaMeses(garantiaMeses);
+        } else {
+            diasVencimiento = leerEnteroNoNegativo(scanner, "Ingrese la cantidad de dias para el vencimiento");
+            ((ArticuloAlimenticio) articulo).setDiasParaVencimiento(diasVencimiento);
+        }
+        System.out.println("Articulo modificado correctamente.");
     }
 
     // 6.5 - Eliminar articulo
     public static void eliminarArticulo(Scanner scanner, ArrayList<Articulo> articulos) {
+        int codigoArticulo;
+        Articulo articulo;
 
+        if (articulos.isEmpty()) {
+            System.out.println("No hay articulos que eliminar.");
+            return;
+        }
+        codigoArticulo = leerEntero(scanner, "Ingrese el codigo del articulo");
+        articulo = buscarArticuloPorCodigo(articulos, codigoArticulo);
+        if (articulo == null) {
+            System.out.println("El articulo no existe.");
+            return;
+        }
+        articulos.remove(articulo);
+        System.out.println("Articulo eliminado correctamente.");
     }
 
     // 6.6 - Listar categorias
     public static void listarCategorias(ArrayList<Categoria> categorias) {
-
+        for (Categoria cat : categorias) {
+            System.out.println(cat);
+            System.out.println();
+        }
     }
 
     // 7.1 - Buscar articulo por codigo
-    public static void buscarArticuloPorCodigo(ArrayList<Articulo> articulos, int codigo) {
-
+    public static Articulo buscarArticuloPorCodigo(ArrayList<Articulo> articulos, int codigo) {
+        for (Articulo articulo : articulos) {
+            if (articulo.getCodigo() == codigo) {
+                return articulo;
+            }
+        }
+        System.out.println("No se encuentra el articulo solicitado");
+        return null;
     }
 
     // 7.2 - Buscar una categoria por codigo
     public static Categoria buscarCategoriaPorCodigo(ArrayList<Categoria> categorias, int codigo) {
+        for (Categoria cat : categorias) {
+            if (cat.getCodigo() == codigo) {
+                return cat;
+            }
+        }
         return null;
     }
 
     // 7.3 - Solicitar una categoria existente
     public static Categoria pedirCategoriaExistente(Scanner scanner, ArrayList<Categoria> categorias) {
-        return null;
+        while (true) {
+            int codigo = leerEntero(scanner, "Ingrese el codigo de la categoria: ");
+            for (Categoria cat : categorias) {
+                if (cat.getCodigo() == codigo) {
+                    return cat;
+                }
+            }
+        }
     }
 
     // 7.4 - Leer un numero entero
@@ -132,7 +241,7 @@ public class App {
             System.out.println(mensaje);
             String entrada = scanner.nextLine();
             try {
-                if (Double.parseDouble(entrada) >= 0) {
+                if (Double.parseDouble(entrada) >= 0 && Double.isFinite(Double.parseDouble(entrada))) {
                     return Double.parseDouble(entrada);
                 } else {
                     System.out.println("Ingrese un numero mayor a 0.");
@@ -155,7 +264,7 @@ public class App {
         }
     }
 
-    void main(String[] args) {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         ArrayList<Articulo> articulos = new ArrayList<>();
         ArrayList<Categoria> categoria = new ArrayList<>();
@@ -165,7 +274,7 @@ public class App {
         int opcion;
         do {
             menu();
-            opcion = Integer.parseInt(sc.nextLine());
+            opcion = leerEntero(sc, "» Ingrese una opción:");
             switch (opcion) {
                 case 1:
                     ingresarArticulo(sc, articulos, categoria);

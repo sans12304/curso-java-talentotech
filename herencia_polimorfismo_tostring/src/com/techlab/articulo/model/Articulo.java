@@ -64,7 +64,7 @@ Detalle específico.
         return "Código: " + codigo +
                 "\nNombre: " + nombre +
                 "\nPrecio: " + precio +
-                "\nCategoria: " + categoria +
+                "\nCategoria: " + categoria.getNombre() +
                 "\nTipo de artículo: " + getTipoArticulo() +
                 "\nDetalle específico: " + getDetalleEspecifico();
     }
